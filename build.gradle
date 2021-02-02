@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'com.refactify'
@@ -22,21 +22,23 @@ shadowJar {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile "org.liquibase:liquibase-core:3.8.0"
+    compile "org.liquibase:liquibase-core:4.2.0"
     compile "org.yaml:snakeyaml:1.23"
     compile 'org.slf4j:slf4j-api:1.7.25'
 }
 
-task prepareDist(dependsOn: 'shadowJar') << {
-    copy {
-        from ('build/libs/') {
-            rename 'liquify(.*).jar', 'liquify.jar'
+task prepareDist(dependsOn: 'shadowJar') {
+    doLast {
+        copy {
+            from ('build/libs/') {
+                rename 'liquify(.*).jar', 'liquify.jar'
+            }
+            into 'build/dist/libs'
         }
-        into 'build/dist/libs'
-    }
-    copy {
-        from 'src/main/shell/'
-        into 'build/dist/'
+        copy {
+            from 'src/main/shell/'
+            into 'build/dist/'
+        }
     }
 }
 
